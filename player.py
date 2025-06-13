@@ -10,7 +10,10 @@ class Player(CircleShape):
         self.rotation = 0
         self.shoot_timer = 0
         self.bomb_cooldown = 0
-        self.weapon_type = "laser"  # could switch to "bomb"
+        self.weapon_type = "laser"  # "laser" or "bomb"
+
+        if hasattr(self, 'containers'):
+            self.add(*self.containers)
 
     def draw(self, screen):
         pygame.draw.polygon(screen, "white", self.triangle(), 2)
@@ -33,7 +36,7 @@ class Player(CircleShape):
         if keys[pygame.K_d]:
             self.rotate(dt)
         if keys[pygame.K_w]:
-            self.move(dt)      
+            self.move(dt)
         if keys[pygame.K_s]:
             self.move(-dt)
         if keys[pygame.K_SPACE]:
@@ -47,7 +50,7 @@ class Player(CircleShape):
         if self.shoot_timer > 0 or self.weapon_type != "laser":
             return
         self.shoot_timer = PLAYER_SHOOT_COOLDOWN
-        direction = pygame.Vector2(0, -1).rotate(self.rotation) 
+        direction = pygame.Vector2(0, -1).rotate(self.rotation)
         offset = direction * PLAYER_RADIUS
         spawn_pos = self.position + offset
         shot = Shot(spawn_pos.x, spawn_pos.y)
@@ -56,7 +59,7 @@ class Player(CircleShape):
     def drop_bomb(self):
         if self.bomb_cooldown > 0 or self.weapon_type != "bomb":
             return
-        self.bomb_cooldown = 1.5  # 1.5 sec cooldown
+        self.bomb_cooldown = 1.5  # cooldown in seconds
         Bomb(self.position.x, self.position.y)
 
     def rotate(self, dt):

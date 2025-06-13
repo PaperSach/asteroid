@@ -4,9 +4,13 @@ from constants import *
 from circleshape import CircleShape
 
 class Asteroid(CircleShape):
+    containers = None
+
     def __init__(self, x, y, radius):
         super().__init__(x, y, radius)
         self.velocity = pygame.Vector2(random.uniform(-100, 100), random.uniform(-100, 100))
+        if self.containers:
+            self.add(*self.containers)
 
     def draw(self, screen):
         pygame.draw.circle(screen, "white", self.position, self.radius, 2)
@@ -43,6 +47,5 @@ class Asteroid(CircleShape):
         asteroid2.velocity = b * 1.2
 
     def collides_with(self, other):
-        # Basic collision detection
         dist = self.position.distance_to(other.position)
         return dist < self.radius + other.radius
