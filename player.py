@@ -10,10 +10,7 @@ class Player(CircleShape):
         self.rotation = 0
         self.shoot_timer = 0
         self.bomb_cooldown = 0
-        self.weapon_type = "laser"  # "laser" or "bomb"
-
-        if hasattr(self, 'containers'):
-            self.add(*self.containers)
+        self.weapon_type = "laser"
 
     def draw(self, screen):
         pygame.draw.polygon(screen, "white", self.triangle(), 2)
@@ -56,11 +53,19 @@ class Player(CircleShape):
         shot = Shot(spawn_pos.x, spawn_pos.y)
         shot.velocity = direction * PLAYER_SHOOT_SPEED
 
+        # Ensure it's added to containers if defined
+        if hasattr(Shot, "containers"):
+            for group in Shot.containers:
+                group.add(shot)
+
     def drop_bomb(self):
         if self.bomb_cooldown > 0 or self.weapon_type != "bomb":
             return
-        self.bomb_cooldown = 1.5  # cooldown in seconds
-        Bomb(self.position.x, self.position.y)
+        self.bomb_cooldown = 1.5
+        bomb = Bomb(self.position.x, self.position.y)
+        if hasattr(Bomb, "containers"):
+            for group in Bomb.containers:
+                group.add(bomb)
 
     def rotate(self, dt):
         self.rotation += PLAYER_TURN_SPEED * dt
