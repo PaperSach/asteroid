@@ -7,7 +7,7 @@ class Explosion(CircleShape):
 
     def __init__(self, position):
         super().__init__(position.x, position.y, 30)
-        self.timer = 0.5  # half second duration
+        self.timer = 0.5
         if self.containers:
             self.add(*self.containers)
 
@@ -19,4 +19,4 @@ class Explosion(CircleShape):
     def draw(self, screen):
         radius = int(self.radius * (self.timer / 0.5))
         if radius > 0:
-            pygame.draw.circle(screen, (255, 165, 0), self.position, radius)
+            pygame.draw.circle(screen, (255, 165, 0), (int(self.position.x), int(self.position.y)), radius)

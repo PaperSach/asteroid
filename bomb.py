@@ -7,14 +7,14 @@ class Bomb(CircleShape):
 
     def __init__(self, x, y):
         super().__init__(x, y, 10)
-        self.velocity = pygame.Vector2(0, 100)  # Falls downward slowly
-        self.timer = 3  # seconds before explosion
+        self.velocity = pygame.Vector2(0, 100)
+        self.timer = 3
         if self.containers:
             self.add(*self.containers)
 
     def draw(self, screen):
-        pygame.draw.circle(screen, (255, 0, 0), self.position, self.radius)
-        pygame.draw.circle(screen, (255, 255, 0), self.position, self.radius - 3)
+        pygame.draw.circle(screen, (255, 0, 0), (int(self.position.x), int(self.position.y)), self.radius)
+        pygame.draw.circle(screen, (255, 255, 0), (int(self.position.x), int(self.position.y)), self.radius - 3)
 
     def update(self, dt):
         self.position += self.velocity * dt
@@ -24,7 +24,7 @@ class Bomb(CircleShape):
             self.explode()
 
     def explode(self):
-        from explosion import Explosion  # avoid circular import
+        from explosion import Explosion
         Explosion(self.position)
         self.kill()
 

@@ -13,7 +13,7 @@ class Player(CircleShape):
         self.weapon_type = "laser"
 
     def draw(self, screen):
-        pygame.draw.polygon(screen, "white", self.triangle(), 2)
+        pygame.draw.polygon(screen, "white", [(int(p.x), int(p.y)) for p in self.triangle()], 2)
 
     def triangle(self):
         forward = pygame.Vector2(0, -1).rotate(self.rotation)
@@ -53,7 +53,6 @@ class Player(CircleShape):
         shot = Shot(spawn_pos.x, spawn_pos.y)
         shot.velocity = direction * PLAYER_SHOOT_SPEED
 
-        # Ensure it's added to containers if defined
         if hasattr(Shot, "containers"):
             for group in Shot.containers:
                 group.add(shot)
