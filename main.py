@@ -18,9 +18,6 @@ def main():
     background = pygame.image.load("background.jpg").convert()
     background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
-    # Font for score display
-    font = pygame.font.SysFont(None, 36)  # Default font, size 36
-
     # Sprite groups
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
@@ -38,11 +35,12 @@ def main():
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     asteroid_field = AsteroidField()
 
-    score = 0  # Initialize score
-
-    dt = 0
+    score = 0
+    font = pygame.font.Font(None, 36)  # Default font, size 36
 
     while True:
+        dt = clock.tick(60) / 1000  # Calculate dt at the start of the loop
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
@@ -50,29 +48,27 @@ def main():
         updatable.update(dt)
         asteroid_field.update(dt)
 
-        # Handle collisions and update score
-        for asteroid in list(asteroids):
+        # Handle collisions
+        for asteroid in asteroids:
             if asteroid.collides_with(player):
-                print("Game Over! Final Score:", score)
+                print("Game Over!")
                 return
-            for shot in list(shots):
+            for shot in shots:
                 if asteroid.collides_with(shot):
                     shot.kill()
                     asteroid.split()
-                    score += 10  # Add points per asteroid hit
+                    score += 10  # Increase score for destroying asteroid
 
         # Draw background and game objects
         screen.blit(background, (0, 0))
-
         for obj in drawable:
             obj.draw(screen)
 
-        # Draw score on screen
-        score_surface = font.render(f"Score: {score}", True, (255, 255, 255))
-        screen.blit(score_surface, (10, 10))
+        # Render score on screen
+        score_text = font.render(f"Score: {score}", True, (255, 255, 255))
+        screen.blit(score_text, (10, 10))
 
         pygame.display.flip()
-        dt = clock.tick(60) / 1000
 
 if __name__ == "__main__":
     main()
