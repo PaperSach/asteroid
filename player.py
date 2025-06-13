@@ -5,6 +5,8 @@ from shot import Shot
 from bomb import Bomb
 
 class Player(CircleShape):
+    containers = None
+
     def __init__(self, x, y):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
@@ -12,8 +14,12 @@ class Player(CircleShape):
         self.bomb_cooldown = 0
         self.weapon_type = "laser"
 
+        if self.containers:
+            self.add(*self.containers)
+
     def draw(self, screen):
-        pygame.draw.polygon(screen, "white", [(int(p.x), int(p.y)) for p in self.triangle()], 2)
+        points = [(int(p.x), int(p.y)) for p in self.triangle()]
+        pygame.draw.polygon(screen, "white", points, 2)
 
     def triangle(self):
         forward = pygame.Vector2(0, -1).rotate(self.rotation)
