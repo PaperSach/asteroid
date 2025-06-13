@@ -14,6 +14,7 @@ class Player(CircleShape):
         self.bomb_cooldown = 0
         self.weapon_type = "laser"
         self.lives = 3
+        self.score = 0  # ✅ Fix: add this line
 
         if self.containers:
             self.add(*self.containers)
@@ -34,7 +35,6 @@ class Player(CircleShape):
         self.bomb_cooldown -= dt
         keys = pygame.key.get_pressed()
 
-        # Switch weapon types
         if keys[pygame.K_1]:
             self.weapon_type = "laser"
         if keys[pygame.K_2]:
