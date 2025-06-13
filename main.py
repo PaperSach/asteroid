@@ -48,11 +48,17 @@ def main():
         updatable.update(dt)
         asteroid_field.update(dt)
 
-        # Handle collisions
+        # Handle collisions and life system
         for asteroid in asteroids:
             if asteroid.collides_with(player):
-                print("Game Over!")
-                return
+                player.lives -= 1
+                print(f"Lives left: {player.lives}")
+                # Reset player position and rotation on hit
+                player.position = pygame.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+                player.rotation = 0
+                if player.lives <= 0:
+                    print("Game Over!")
+                    return
             for shot in shots:
                 if asteroid.collides_with(shot):
                     shot.kill()
@@ -64,9 +70,14 @@ def main():
         for obj in drawable:
             obj.draw(screen)
 
-        # Render score on screen
-        score_text = font.render(f"Score: {score}", True, (255, 255, 255))
+        # Render score on screen (top left)
+        score_text = font.render(f"Score: {score}", True, (0, 0, 0))
         screen.blit(score_text, (10, 10))
+
+        # Render lives on screen (top right)
+        lives_text = font.render(f"Lives: {player.lives}", True, (0, 0, 0))
+        lives_rect = lives_text.get_rect(topright=(SCREEN_WIDTH - 10, 10))
+        screen.blit(lives_text, lives_rect)
 
         pygame.display.flip()
 
