@@ -14,7 +14,8 @@ class Player(CircleShape):
         self.lives = 3  # Added life count
 
     def draw(self, screen):
-        pygame.draw.polygon(screen, (0, 0, 0), self.triangle(), 2)
+        points = self.triangle()
+        pygame.draw.polygon(screen, (255, 255, 255), points, 2)
 
     def triangle(self):
         forward = pygame.Vector2(0, -1).rotate(self.rotation)
@@ -22,7 +23,8 @@ class Player(CircleShape):
         a = self.position + forward * self.radius
         b = self.position - forward * self.radius + right
         c = self.position - forward * self.radius - right
-        return [a, b, c]
+        # Convert vectors to tuples for pygame draw
+        return [(a.x, a.y), (b.x, b.y), (c.x, c.y)]
 
     def update(self, dt):
         self.shoot_timer -= dt

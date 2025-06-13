@@ -22,8 +22,9 @@ class AsteroidField:
             elif edge == 'left':
                 x = 0
                 y = random.uniform(0, SCREEN_HEIGHT)
-            else:
+            else:  # right
                 x = SCREEN_WIDTH
                 y = random.uniform(0, SCREEN_HEIGHT)
 
+            # Creating an asteroid will auto-add it to sprite groups via containers
             Asteroid(x, y, radius)

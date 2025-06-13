@@ -12,15 +12,12 @@ class Shot(CircleShape):
             self.add(*self.containers)
 
     def draw(self, screen):
-        pygame.draw.circle(screen, "white", (int(self.position.x), int(self.position.y)), self.radius)
+        pygame.draw.circle(screen, (255, 255, 255), (int(self.position.x), int(self.position.y)), self.radius)
 
     def update(self, dt):
         self.position += self.velocity * dt
-
-        if (self.position.x < 0 or self.position.x > SCREEN_WIDTH or
-            self.position.y < 0 or self.position.y > SCREEN_HEIGHT):
+        if (
+            self.position.x < 0 or self.position.x > SCREEN_WIDTH or
+            self.position.y < 0 or self.position.y > SCREEN_HEIGHT
+        ):
             self.kill()
-
-    def collides_with(self, other):
-        dist = self.position.distance_to(other.position)
-        return dist < self.radius + other.radius

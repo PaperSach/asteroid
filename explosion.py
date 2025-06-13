@@ -7,7 +7,7 @@ class Explosion(CircleShape):
 
     def __init__(self, position):
         super().__init__(position.x, position.y, 30)
-        self.timer = 0.5
+        self.timer = 0.5  # half second duration
         if self.containers:
             self.add(*self.containers)
 

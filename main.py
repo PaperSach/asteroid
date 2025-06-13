@@ -6,7 +6,7 @@ from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
 from bomb import Bomb
-from explosion import Explosion  # If using explosion effects
+from explosion import Explosion
 
 def main():
     pygame.init()
@@ -36,10 +36,10 @@ def main():
     asteroid_field = AsteroidField()
 
     score = 0
-    font = pygame.font.Font(None, 36)  # Default font, size 36
+    font = pygame.font.Font(None, 36)
 
     while True:
-        dt = clock.tick(60) / 1000  # Calculate dt at the start of the loop
+        dt = clock.tick(60) / 1000  # Delta time for frame
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -53,7 +53,6 @@ def main():
             if asteroid.collides_with(player):
                 player.lives -= 1
                 print(f"Lives left: {player.lives}")
-                # Reset player position and rotation on hit
                 player.position = pygame.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
                 player.rotation = 0
                 if player.lives <= 0:
@@ -63,19 +62,19 @@ def main():
                 if asteroid.collides_with(shot):
                     shot.kill()
                     asteroid.split()
-                    score += 10  # Increase score for destroying asteroid
+                    score += 10
 
         # Draw background and game objects
         screen.blit(background, (0, 0))
         for obj in drawable:
             obj.draw(screen)
 
-        # Render score on screen (top left)
-        score_text = font.render(f"Score: {score}", True, (0, 0, 0))
+        # Draw score (white)
+        score_text = font.render(f"Score: {score}", True, (255, 255, 255))
         screen.blit(score_text, (10, 10))
 
-        # Render lives on screen (top right)
-        lives_text = font.render(f"Lives: {player.lives}", True, (0, 0, 0))
+        # Draw lives (white) at top right
+        lives_text = font.render(f"Lives: {player.lives}", True, (255, 255, 255))
         lives_rect = lives_text.get_rect(topright=(SCREEN_WIDTH - 10, 10))
         screen.blit(lives_text, lives_rect)
 
