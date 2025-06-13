@@ -54,7 +54,7 @@ def main():
                 player.lives -= 1
 
                 # Flash screen red
-                screen.fill((255, 0, 0))
+                screen.fill((255, 255, 255))
                 pygame.display.flip()
                 pygame.time.delay(500)  # Pause for half a second
 
