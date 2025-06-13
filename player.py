@@ -5,7 +5,7 @@ from shot import Shot
 from bomb import Bomb
 
 class Player(CircleShape):
-    containers = None  # Will be set in main.py
+    containers = None
 
     def __init__(self, x, y):
         super().__init__(x, y, PLAYER_RADIUS)
@@ -14,14 +14,12 @@ class Player(CircleShape):
         self.bomb_cooldown = 0
         self.weapon_type = "laser"
         self.lives = 3
-        self.score = 0  # Initialize score
 
         if self.containers:
             self.add(*self.containers)
 
     def draw(self, screen):
-        points = self.triangle()
-        pygame.draw.polygon(screen, (255, 255, 255), points, 2)
+        pygame.draw.polygon(screen, "white", self.triangle())
 
     def triangle(self):
         forward = pygame.Vector2(0, -1).rotate(self.rotation)
@@ -29,14 +27,18 @@ class Player(CircleShape):
         a = self.position + forward * self.radius
         b = self.position - forward * self.radius + right
         c = self.position - forward * self.radius - right
-        # Return integer tuples for drawing
-        return [(int(a.x), int(a.y)), (int(b.x), int(b.y)), (int(c.x), int(c.y))]
+        return [a, b, c]
 
     def update(self, dt):
         self.shoot_timer -= dt
         self.bomb_cooldown -= dt
-
         keys = pygame.key.get_pressed()
+
+        # Switch weapon types
+        if keys[pygame.K_1]:
+            self.weapon_type = "laser"
+        if keys[pygame.K_2]:
+            self.weapon_type = "bomb"
 
         if keys[pygame.K_a]:
             self.rotate(-dt)
@@ -78,7 +80,6 @@ class Player(CircleShape):
 
     def rotate(self, dt):
         self.rotation += PLAYER_TURN_SPEED * dt
-        self.rotation %= 360
 
     def move(self, dt):
         forward = pygame.Vector2(0, -1).rotate(self.rotation)
