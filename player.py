@@ -15,7 +15,6 @@ class Player(CircleShape):
 
     def draw(self, screen):
         points = self.triangle()
-        # Convert points to int tuples for pygame drawing
         int_points = [(int(p[0]), int(p[1])) for p in points]
         pygame.draw.polygon(screen, (255, 255, 255), int_points, 2)
 
@@ -30,6 +29,7 @@ class Player(CircleShape):
     def update(self, dt):
         self.shoot_timer -= dt
         self.bomb_cooldown -= dt
+
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_a]:
@@ -72,6 +72,7 @@ class Player(CircleShape):
 
     def rotate(self, dt):
         self.rotation += PLAYER_TURN_SPEED * dt
+        self.rotation %= 360  # Keep rotation within 0-359
 
     def move(self, dt):
         forward = pygame.Vector2(0, -1).rotate(self.rotation)
