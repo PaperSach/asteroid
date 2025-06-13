@@ -11,11 +11,14 @@ from explosion import Explosion
 def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    pygame.display.set_caption("Asteroid Game")
     clock = pygame.time.Clock()
 
+    # Load and scale background image
     background = pygame.image.load("background.jpg").convert()
     background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
 
+    # Sprite groups
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
     asteroids = pygame.sprite.Group()
@@ -23,13 +26,14 @@ def main():
     bombs = pygame.sprite.Group()
     explosions = pygame.sprite.Group()
 
+    # Hook containers
     Asteroid.containers = (asteroids, updatable, drawable)
     Shot.containers = (shots, updatable, drawable)
-    Player.containers = (updatable, drawable)
     Bomb.containers = (bombs, updatable, drawable)
     Explosion.containers = (explosions, updatable, drawable)
-    AsteroidField.containers = (updatable,)
+    Player.containers = (updatable, drawable)
 
+    # Game objects
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     asteroid_field = AsteroidField()
 
@@ -41,8 +45,27 @@ def main():
                 pygame.quit()
                 sys.exit()
 
+        # Update logic
         updatable.update(dt)
+        asteroid_field.update(dt)
 
+        # Collision logic
+        for asteroid in asteroids:
+            if asteroid.collides_with(player):
+                print("Game Over!")
+                pygame.quit()
+                sys.exit()
+
+            for shot in shots:
+                if asteroid.collides_with(shot):
+                    asteroid.split()
+                    shot.kill()
+
+            for bomb in bombs:
+                if asteroid.collides_with(bomb):
+                    asteroid.split()
+
+        # Draw everything
         screen.blit(background, (0, 0))
 
         for obj in drawable:
