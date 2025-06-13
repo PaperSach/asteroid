@@ -35,12 +35,13 @@ def main():
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     asteroid_field = AsteroidField()
 
+    dt = 0
+
+    # Font for score and lives
+    font = pygame.font.SysFont(None, 36)
     score = 0
-    font = pygame.font.Font(None, 36)
 
     while True:
-        dt = clock.tick(60) / 1000  # Delta time for frame
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
@@ -48,37 +49,43 @@ def main():
         updatable.update(dt)
         asteroid_field.update(dt)
 
-        # Handle collisions and life system
+        # Handle collisions
         for asteroid in asteroids:
             if asteroid.collides_with(player):
                 player.lives -= 1
-                print(f"Lives left: {player.lives}")
-                player.position = pygame.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
-                player.rotation = 0
                 if player.lives <= 0:
                     print("Game Over!")
                     return
+                # Move player to center after hit
+                player.position = pygame.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+                player.rotation = 0
+
             for shot in shots:
                 if asteroid.collides_with(shot):
                     shot.kill()
                     asteroid.split()
                     score += 10
 
-        # Draw background and game objects
+        # Draw background
         screen.blit(background, (0, 0))
-        for obj in drawable:
-            obj.draw(screen)
 
-        # Draw score (white)
+        # Draw player explicitly first so it appears on top of background
+        player.draw(screen)
+
+        # Draw other drawable objects except player
+        for obj in drawable:
+            if obj != player:
+                obj.draw(screen)
+
+        # Draw score and lives
         score_text = font.render(f"Score: {score}", True, (255, 255, 255))
         screen.blit(score_text, (10, 10))
 
-        # Draw lives (white) at top right
         lives_text = font.render(f"Lives: {player.lives}", True, (255, 255, 255))
-        lives_rect = lives_text.get_rect(topright=(SCREEN_WIDTH - 10, 10))
-        screen.blit(lives_text, lives_rect)
+        screen.blit(lives_text, (SCREEN_WIDTH - 120, 10))
 
         pygame.display.flip()
+        dt = clock.tick(60) / 1000
 
 if __name__ == "__main__":
     main()

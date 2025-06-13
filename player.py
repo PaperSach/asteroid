@@ -11,11 +11,13 @@ class Player(CircleShape):
         self.shoot_timer = 0
         self.bomb_cooldown = 0
         self.weapon_type = "laser"
-        self.lives = 3  # Added life count
+        self.lives = 3
 
     def draw(self, screen):
         points = self.triangle()
-        pygame.draw.polygon(screen, (255, 255, 255), points, 2)
+        # Convert points to int tuples for pygame drawing
+        int_points = [(int(p[0]), int(p[1])) for p in points]
+        pygame.draw.polygon(screen, (255, 255, 255), int_points, 2)
 
     def triangle(self):
         forward = pygame.Vector2(0, -1).rotate(self.rotation)
@@ -23,7 +25,6 @@ class Player(CircleShape):
         a = self.position + forward * self.radius
         b = self.position - forward * self.radius + right
         c = self.position - forward * self.radius - right
-        # Convert vectors to tuples for pygame draw
         return [(a.x, a.y), (b.x, b.y), (c.x, c.y)]
 
     def update(self, dt):
