@@ -13,7 +13,7 @@ class Player(CircleShape):
         self.shoot_timer = 0
         self.bomb_cooldown = 0
         self.weapon_type = "laser"
-        self.lives = 3
+        self.lives = 5
         self.score = 0  # ✅ Fix: add this line
 
         if self.containers:

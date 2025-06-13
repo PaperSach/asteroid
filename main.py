@@ -6,7 +6,7 @@ from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
 from bomb import Bomb
-from explosion import Explosion  # If using explosion effects
+from explosion import Explosion
 
 def main():
     pygame.init()
@@ -14,9 +14,10 @@ def main():
     pygame.display.set_caption("Asteroid Game")
     clock = pygame.time.Clock()
 
-    # Load and scale background image
     background = pygame.image.load("background.jpg").convert()
     background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
+
+    font = pygame.font.SysFont(None, 36)
 
     # Sprite groups
     updatable = pygame.sprite.Group()
@@ -34,9 +35,7 @@ def main():
     # Create game objects
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     asteroid_field = AsteroidField()
-
-    # Font for score and lives display
-    font = pygame.font.SysFont(None, 36)
+    player.score = 0  # Initialize score
 
     dt = 0
 
@@ -49,30 +48,38 @@ def main():
         asteroid_field.update(dt)
 
         # Handle collisions
-        for asteroid in asteroids:
+        for asteroid in list(asteroids):
             if asteroid.collides_with(player):
+                asteroid.kill()
                 player.lives -= 1
+
+                # Flash screen red
+                screen.fill((255, 0, 0))
+                pygame.display.flip()
+                pygame.time.delay(500)  # Pause for half a second
+
                 if player.lives <= 0:
                     print("Game Over!")
                     return
-            for shot in shots:
+
+            for shot in list(shots):
                 if asteroid.collides_with(shot):
                     shot.kill()
                     asteroid.split()
-                    player.score += 10  # Increment score when asteroid destroyed
+                    player.score += 10
 
-        # Draw background and game objects
+        # Draw everything
         screen.blit(background, (0, 0))
         for obj in drawable:
             obj.draw(screen)
 
-        # Draw score (white)
+        # Score (white, top left)
         score_text = font.render(f"Score: {player.score}", True, (255, 255, 255))
         screen.blit(score_text, (10, 10))
 
-        # Draw lives (white, top right)
+        # Lives (white, top right)
         lives_text = font.render(f"Lives: {player.lives}", True, (255, 255, 255))
-        screen.blit(lives_text, (SCREEN_WIDTH - lives_text.get_width() - 10, 10))
+        screen.blit(lives_text, (SCREEN_WIDTH - 120, 10))
 
         pygame.display.flip()
         dt = clock.tick(60) / 1000
